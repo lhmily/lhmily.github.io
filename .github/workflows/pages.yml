@@ -21,7 +21,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Validate static site
+      - name: Prepare deployable site
+        env:
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ secrets.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+        run: python3 scripts/prepare_site.py
+
+      - name: Validate deployable site
         run: |
           python3 - <<'PY'
           from html.parser import HTMLParser
@@ -29,9 +34,15 @@ jobs:
           from xml.etree import ElementTree
           import json
 
-          root = Path(".")
-          html = (root / "index.html").read_text()
-          HTMLParser().feed(html)
+          source = Path(".")
+          root = Path("_site")
+          committed = (source / "index.html").read_text()
+          if "static.cloudflareinsights.com/beacon.min.js" in committed:
+              raise SystemExit("analytics token or beacon must not be committed")
+          if "CLOUDFLARE_WEB_ANALYTICS" not in committed:
+              raise SystemExit("analytics placeholder is missing")
+
+          HTMLParser().feed((root / "index.html").read_text())
           json.loads((root / "site.webmanifest").read_text())
           ElementTree.parse(root / "sitemap.xml")
           ElementTree.parse(root / "root-sitemap.xml")
@@ -57,7 +68,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
   deploy:
     environment:
