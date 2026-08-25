@@ -1,0 +1,71 @@
+name: Deploy personal site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate static site
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from xml.etree import ElementTree
+          import json
+
+          root = Path(".")
+          html = (root / "index.html").read_text()
+          HTMLParser().feed(html)
+          json.loads((root / "site.webmanifest").read_text())
+          ElementTree.parse(root / "sitemap.xml")
+          ElementTree.parse(root / "root-sitemap.xml")
+
+          required = (
+              ".nojekyll",
+              "robots.txt",
+              "assets/branding/lemon.svg",
+              "assets/branding/favicon.ico",
+              "assets/branding/favicon.png",
+              "assets/branding/apple-touch-icon.png",
+              "assets/branding/icon-192.png",
+              "assets/branding/icon-512.png",
+          )
+          missing = [path for path in required if not (root / path).exists()]
+          if missing:
+              raise SystemExit(f"missing required assets: {', '.join(missing)}")
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
