@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lhmily.github.io/sitemap.xml
