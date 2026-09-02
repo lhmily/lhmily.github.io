@@ -33,6 +33,39 @@ jobs:
           from pathlib import Path
           from xml.etree import ElementTree
           import json
+          import struct
+
+          class SiteParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.anchors = set()
+                  self.json_ld = []
+                  self.links = []
+                  self.metas = []
+                  self.title = []
+                  self._capture = None
+
+              def handle_starttag(self, tag, attrs):
+                  values = dict(attrs)
+                  if tag == "a" and values.get("href"):
+                      self.anchors.add(values["href"])
+                  elif tag == "link":
+                      self.links.append(values)
+                  elif tag == "meta":
+                      self.metas.append(values)
+                  elif tag == "title":
+                      self._capture = self.title
+                  elif tag == "script" and values.get("type") == "application/ld+json":
+                      self.json_ld.append([])
+                      self._capture = self.json_ld[-1]
+
+              def handle_endtag(self, tag):
+                  if tag in {"title", "script"}:
+                      self._capture = None
+
+              def handle_data(self, data):
+                  if self._capture is not None:
+                      self._capture.append(data)
 
           source = Path(".")
           root = Path("_site")
@@ -42,7 +75,78 @@ jobs:
           if "CLOUDFLARE_WEB_ANALYTICS" not in committed:
               raise SystemExit("analytics placeholder is missing")
 
-          HTMLParser().feed((root / "index.html").read_text())
+          parser = SiteParser()
+          parser.feed((root / "index.html").read_text())
+          expected_title = "lhmily — Software Engineer and Builder"
+          if "".join(parser.title).strip() != expected_title:
+              raise SystemExit("unexpected page title")
+
+          canonical = "https://lhmily.github.io/"
+          image = f"{canonical}assets/branding/homepage-social-card.png"
+          if not any(link.get("rel") == "canonical" and link.get("href") == canonical for link in parser.links):
+              raise SystemExit("canonical URL is missing or incorrect")
+
+          metadata = {}
+          for meta in parser.metas:
+              key = meta.get("property") or meta.get("name")
+              if key:
+                  metadata[key] = meta.get("content")
+          expected_metadata = {
+              "og:title": expected_title,
+              "og:url": canonical,
+              "og:image": image,
+              "og:image:type": "image/png",
+              "og:image:width": "1200",
+              "og:image:height": "630",
+              "og:image:alt": "lhmily — software engineer and builder",
+              "twitter:card": "summary_large_image",
+              "twitter:title": expected_title,
+              "twitter:image": image,
+              "twitter:image:alt": "lhmily — software engineer and builder",
+          }
+          invalid_metadata = [key for key, value in expected_metadata.items() if metadata.get(key) != value]
+          if invalid_metadata:
+              raise SystemExit(f"missing or incorrect metadata: {', '.join(invalid_metadata)}")
+
+          expected_anchors = {
+              "#projects",
+              "https://lhmily.github.io/llm-lessons/",
+              "https://lhmily.github.io/llm-lessons/lessons/tensors-and-shapes/",
+              "https://github.com/lhmily/llm-lessons",
+          }
+          missing_anchors = expected_anchors - parser.anchors
+          if missing_anchors:
+              raise SystemExit(f"missing course links: {', '.join(sorted(missing_anchors))}")
+
+          graphs = [json.loads("".join(script)) for script in parser.json_ld]
+          nodes = {
+              node["@id"]: node
+              for graph in graphs
+              for node in graph.get("@graph", [])
+              if "@id" in node
+          }
+          person_id = f"{canonical}#person"
+          website_id = f"{canonical}#website"
+          profile_id = f"{canonical}#profile"
+          course_id = f"{canonical}llm-lessons/#course"
+          expected_types = {
+              person_id: "Person",
+              website_id: "WebSite",
+              profile_id: "ProfilePage",
+              course_id: "Course",
+          }
+          invalid_nodes = [node_id for node_id, node_type in expected_types.items() if nodes.get(node_id, {}).get("@type") != node_type]
+          if invalid_nodes:
+              raise SystemExit(f"missing or incorrect JSON-LD nodes: {', '.join(invalid_nodes)}")
+          if nodes[profile_id].get("mainEntity", {}).get("@id") != person_id:
+              raise SystemExit("ProfilePage must reference the Person as mainEntity")
+          if nodes[profile_id].get("isPartOf", {}).get("@id") != website_id:
+              raise SystemExit("ProfilePage must reference the WebSite")
+          if nodes[profile_id].get("hasPart", {}).get("@id") != course_id:
+              raise SystemExit("ProfilePage must reference the featured Course")
+          if nodes[course_id].get("author", {}).get("@id") != person_id:
+              raise SystemExit("Course must reference the Person as author")
+
           json.loads((root / "site.webmanifest").read_text())
           ElementTree.parse(root / "sitemap.xml")
           ElementTree.parse(root / "root-sitemap.xml")
@@ -56,10 +160,17 @@ jobs:
               "assets/branding/apple-touch-icon.png",
               "assets/branding/icon-192.png",
               "assets/branding/icon-512.png",
+              "assets/branding/homepage-social-card.png",
           )
           missing = [path for path in required if not (root / path).exists()]
           if missing:
               raise SystemExit(f"missing required assets: {', '.join(missing)}")
+
+          social_card = (root / "assets/branding/homepage-social-card.png").read_bytes()
+          if social_card[:8] != b"\x89PNG\r\n\x1a\n":
+              raise SystemExit("social card is not a valid PNG")
+          if struct.unpack(">II", social_card[16:24]) != (1200, 630):
+              raise SystemExit("social card must be 1200x630")
           PY
 
       - name: Configure GitHub Pages
