@@ -43,6 +43,7 @@ jobs:
                   self.links = []
                   self.metas = []
                   self.title = []
+                  self.project_cards = 0
                   self._capture = None
 
               def handle_starttag(self, tag, attrs):
@@ -58,6 +59,8 @@ jobs:
                   elif tag == "script" and values.get("type") == "application/ld+json":
                       self.json_ld.append([])
                       self._capture = self.json_ld[-1]
+                  elif tag == "article" and "project-card" in values.get("class", "").split():
+                      self.project_cards += 1
 
               def handle_endtag(self, tag):
                   if tag in {"title", "script"}:
@@ -113,10 +116,15 @@ jobs:
               "https://lhmily.github.io/llm-lessons/",
               "https://lhmily.github.io/llm-lessons/lessons/tensors-and-shapes/",
               "https://github.com/lhmily/llm-lessons",
+              "https://lhmily.github.io/tcp-ip-course/",
+              "https://lhmily.github.io/tcp-ip-course/lessons/bytes-addressing-checksum/",
+              "https://github.com/lhmily/tcp-ip-course",
           }
           missing_anchors = expected_anchors - parser.anchors
           if missing_anchors:
               raise SystemExit(f"missing course links: {', '.join(sorted(missing_anchors))}")
+          if parser.project_cards != 2:
+              raise SystemExit(f"expected two project cards, found {parser.project_cards}")
 
           graphs = [json.loads("".join(script)) for script in parser.json_ld]
           nodes = {
@@ -128,12 +136,15 @@ jobs:
           person_id = f"{canonical}#person"
           website_id = f"{canonical}#website"
           profile_id = f"{canonical}#profile"
-          course_id = f"{canonical}llm-lessons/#course"
+          course_ids = {
+              f"{canonical}llm-lessons/#course",
+              f"{canonical}tcp-ip-course/#course",
+          }
           expected_types = {
               person_id: "Person",
               website_id: "WebSite",
               profile_id: "ProfilePage",
-              course_id: "Course",
+              **{course_id: "Course" for course_id in course_ids},
           }
           invalid_nodes = [node_id for node_id, node_type in expected_types.items() if nodes.get(node_id, {}).get("@type") != node_type]
           if invalid_nodes:
@@ -142,14 +153,35 @@ jobs:
               raise SystemExit("ProfilePage must reference the Person as mainEntity")
           if nodes[profile_id].get("isPartOf", {}).get("@id") != website_id:
               raise SystemExit("ProfilePage must reference the WebSite")
-          if nodes[profile_id].get("hasPart", {}).get("@id") != course_id:
-              raise SystemExit("ProfilePage must reference the featured Course")
-          if nodes[course_id].get("author", {}).get("@id") != person_id:
-              raise SystemExit("Course must reference the Person as author")
+          has_part = nodes[profile_id].get("hasPart", [])
+          if {reference.get("@id") for reference in has_part} != course_ids:
+              raise SystemExit("ProfilePage must reference exactly both Courses")
+          for course_id in course_ids:
+              course = nodes[course_id]
+              if course.get("author", {}).get("@id") != person_id:
+                  raise SystemExit(f"Course must reference the Person as author: {course_id}")
+              if course.get("provider", {}).get("@id") != person_id:
+                  raise SystemExit(f"Course must reference the Person as provider: {course_id}")
 
           json.loads((root / "site.webmanifest").read_text())
-          ElementTree.parse(root / "sitemap.xml")
-          ElementTree.parse(root / "root-sitemap.xml")
+          namespace = {"sitemap": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          sitemap = ElementTree.parse(root / "sitemap.xml")
+          sitemap_locations = {
+              node.text for node in sitemap.findall("sitemap:sitemap/sitemap:loc", namespace)
+          }
+          expected_sitemaps = {
+              f"{canonical}root-sitemap.xml",
+              f"{canonical}llm-lessons/sitemap.xml",
+              f"{canonical}tcp-ip-course/sitemap.xml",
+          }
+          if sitemap_locations != expected_sitemaps:
+              raise SystemExit("aggregate sitemap must reference root and both course sitemaps")
+          root_sitemap = ElementTree.parse(root / "root-sitemap.xml")
+          root_locations = {
+              node.text for node in root_sitemap.findall("sitemap:url/sitemap:loc", namespace)
+          }
+          if root_locations != {canonical}:
+              raise SystemExit("root sitemap must contain only the personal homepage")
 
           required = (
               ".nojekyll",

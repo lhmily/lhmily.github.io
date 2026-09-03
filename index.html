@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>lhmily — Software Engineer and Builder</title>
-  <meta name="description" content="Personal homepage of lhmily, a software engineer building projects and learning resources across AI, language models, and software systems.">
+  <meta name="description" content="Personal homepage of lhmily, a software engineer building learning-focused projects across AI, computer networks, and software systems.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://lhmily.github.io/">
   <link rel="icon" href="/assets/branding/lemon.svg" type="image/svg+xml">
@@ -12,7 +12,7 @@
   <link rel="shortcut icon" href="/assets/branding/favicon.ico">
   <link rel="apple-touch-icon" href="/assets/branding/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#f5f7fb">
+  <meta name="theme-color" content="#f6f7f9">
   <script>
     (() => {
       const stored = localStorage.getItem("theme");
@@ -26,7 +26,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="lhmily">
   <meta property="og:title" content="lhmily — Software Engineer and Builder">
-  <meta property="og:description" content="Projects and learning resources across AI, language models, and software systems.">
+  <meta property="og:description" content="Projects and learning resources across AI, computer networks, and software systems.">
   <meta property="og:url" content="https://lhmily.github.io/">
   <meta property="og:image" content="https://lhmily.github.io/assets/branding/homepage-social-card.png">
   <meta property="og:image:type" content="image/png">
@@ -35,7 +35,7 @@
   <meta property="og:image:alt" content="lhmily — software engineer and builder">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="lhmily — Software Engineer and Builder">
-  <meta name="twitter:description" content="Projects and learning resources across AI, language models, and software systems.">
+  <meta name="twitter:description" content="Projects and learning resources across AI, computer networks, and software systems.">
   <meta name="twitter:image" content="https://lhmily.github.io/assets/branding/homepage-social-card.png">
   <meta name="twitter:image:alt" content="lhmily — software engineer and builder">
 
@@ -51,14 +51,14 @@
         "name": "lhmily",
         "url": "https://lhmily.github.io/",
         "sameAs": ["https://github.com/lhmily"],
-        "knowsAbout": ["Software Engineering", "Artificial Intelligence", "Language Models", "Software Systems"]
+        "knowsAbout": ["Software Engineering", "Artificial Intelligence", "Language Models", "Computer Networking", "Software Systems"]
       },
       {
         "@type": "WebSite",
         "@id": "https://lhmily.github.io/#website",
         "url": "https://lhmily.github.io/",
         "name": "lhmily",
-        "description": "Projects and learning resources by software engineer lhmily.",
+        "description": "Projects and learning resources across AI, computer networks, and software systems by lhmily.",
         "author": {"@id": "https://lhmily.github.io/#person"}
       },
       {
@@ -66,10 +66,13 @@
         "@id": "https://lhmily.github.io/#profile",
         "url": "https://lhmily.github.io/",
         "name": "lhmily — Software Engineer and Builder",
-        "description": "Personal homepage of lhmily, featuring projects and learning resources across AI, language models, and software systems.",
+        "description": "Personal homepage of lhmily, featuring projects and learning resources across AI, computer networks, and software systems.",
         "isPartOf": {"@id": "https://lhmily.github.io/#website"},
         "mainEntity": {"@id": "https://lhmily.github.io/#person"},
-        "hasPart": {"@id": "https://lhmily.github.io/llm-lessons/#course"}
+        "hasPart": [
+          {"@id": "https://lhmily.github.io/llm-lessons/#course"},
+          {"@id": "https://lhmily.github.io/tcp-ip-course/#course"}
+        ]
       },
       {
         "@type": "Course",
@@ -82,6 +85,18 @@
         "inLanguage": "en",
         "isAccessibleForFree": true,
         "teaches": ["Tensors", "Neural networks", "Attention", "GPT architecture", "Language model training", "Alignment", "Efficient inference"]
+      },
+      {
+        "@type": "Course",
+        "@id": "https://lhmily.github.io/tcp-ip-course/#course",
+        "url": "https://lhmily.github.io/tcp-ip-course/",
+        "name": "TCP/IP Course in C17",
+        "description": "Learn TCP/IP from bytes and link-layer frames through transport, application protocols, routing, and diagnostics in 12 tested C17 lessons.",
+        "author": {"@id": "https://lhmily.github.io/#person"},
+        "provider": {"@id": "https://lhmily.github.io/#person"},
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "teaches": ["Ethernet", "ARP", "IPv4", "ICMP", "UDP", "TCP", "POSIX sockets", "DNS", "HTTP", "Routing", "NAT", "Packet diagnostics"]
       }
     ]
   }
@@ -90,38 +105,34 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f5f7fb;
-      --surface: rgba(255, 255, 255, 0.82);
-      --surface-subtle: rgba(255, 255, 255, 0.48);
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-subtle: #eef1f5;
       --text: #111827;
-      --muted: #536176;
-      --line: rgba(71, 85, 105, 0.2);
-      --blue: #0284c7;
-      --violet: #7c3aed;
-      --green: #047857;
+      --muted: #5c6879;
+      --line: #d8dee8;
+      --blue: #2563eb;
+      --green: #059669;
       --button-text: #ffffff;
-      --shadow: 0 24px 72px rgba(15, 23, 42, 0.11);
-      --glow-blue: rgba(2, 132, 199, 0.12);
-      --glow-violet: rgba(124, 58, 237, 0.11);
-      --glow-green: rgba(4, 120, 87, 0.08);
+      --code-bg: #101827;
+      --code-text: #dbeafe;
+      --shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
     }
 
     :root[data-theme="dark"] {
       color-scheme: dark;
-      --bg: #090d18;
-      --surface: rgba(20, 28, 47, 0.72);
-      --surface-subtle: rgba(255, 255, 255, 0.018);
+      --bg: #0b1020;
+      --surface: #121a2b;
+      --surface-subtle: #182235;
       --text: #f8fafc;
-      --muted: #afbdd2;
-      --line: rgba(148, 163, 184, 0.23);
-      --blue: #7dd3fc;
-      --violet: #c4b5fd;
+      --muted: #a8b5c8;
+      --line: #2c394e;
+      --blue: #60a5fa;
       --green: #6ee7b7;
-      --button-text: #09111f;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
-      --glow-blue: rgba(56, 189, 248, 0.16);
-      --glow-violet: rgba(139, 92, 246, 0.17);
-      --glow-green: rgba(16, 185, 129, 0.1);
+      --button-text: #08111f;
+      --code-bg: #060b14;
+      --code-text: #dbeafe;
+      --shadow: 0 20px 54px rgba(0, 0, 0, 0.28);
     }
 
     * { box-sizing: border-box; }
@@ -131,11 +142,7 @@
       min-height: 100vh;
       margin: 0;
       color: var(--text);
-      background:
-        radial-gradient(circle at 12% 8%, var(--glow-blue), transparent 29rem),
-        radial-gradient(circle at 88% 14%, var(--glow-violet), transparent 31rem),
-        radial-gradient(circle at 50% 95%, var(--glow-green), transparent 28rem),
-        var(--bg);
+      background: var(--bg);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.6;
     }
@@ -194,7 +201,7 @@
     }
 
     .theme-toggle:hover {
-      border-color: var(--violet);
+      border-color: var(--blue);
       color: var(--text);
       background: var(--surface);
     }
@@ -219,38 +226,35 @@
       display: block;
     }
 
-    main { padding: 5rem 0 4rem; }
+    main { padding: 4rem 0 4rem; }
 
-    .hero { max-width: 870px; padding: 3rem 0 7rem; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.85fr);
+      align-items: center;
+      gap: clamp(2.5rem, 7vw, 7rem);
+      padding: 4rem 0 8rem;
+    }
+
+    .hero-copy { min-width: 0; }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
       margin: 0 0 1.2rem;
       color: var(--blue);
-      font-size: 0.8rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      font-size: 0.9rem;
+      font-weight: 750;
     }
-
-    .eyebrow::before { width: 1.9rem; height: 1px; background: currentColor; content: ""; }
 
     h1 {
+      max-width: 10ch;
       margin: 0;
-      font-size: clamp(3.4rem, 9vw, 7.4rem);
-      font-weight: 830;
-      letter-spacing: -0.07em;
-      line-height: 0.94;
+      font-size: clamp(3.5rem, 7vw, 6.2rem);
+      font-weight: 820;
+      letter-spacing: -0.065em;
+      line-height: 0.96;
     }
 
-    .gradient {
-      color: transparent;
-      background: linear-gradient(110deg, var(--blue), var(--violet) 55%, var(--green));
-      background-clip: text;
-      -webkit-background-clip: text;
-    }
+    .accent { color: var(--blue); }
 
     .intro {
       max-width: 730px;
@@ -278,11 +282,42 @@
 
     .button:hover {
       transform: translateY(-2px);
-      border-color: rgba(196, 181, 253, 0.72);
+      border-color: var(--blue);
       background: var(--surface);
     }
 
-    .button.primary { border-color: transparent; color: var(--button-text); background: linear-gradient(115deg, var(--blue), var(--violet)); }
+    .button.primary { border-color: var(--blue); color: var(--button-text); background: var(--blue); }
+
+    .workbench {
+      overflow: hidden;
+      border: 1px solid #26344a;
+      border-radius: 1rem;
+      color: var(--code-text);
+      background: var(--code-bg);
+      box-shadow: var(--shadow);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .workbench-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.78rem 1rem;
+      border-bottom: 1px solid #26344a;
+      color: #8fa5c1;
+      font-size: 0.75rem;
+    }
+
+    .workbench-dots { display: flex; gap: 0.35rem; }
+    .workbench-dots i { width: 0.52rem; height: 0.52rem; border-radius: 50%; background: #3b4a60; }
+    .workbench-body { padding: 1.25rem; font-size: 0.82rem; line-height: 1.75; }
+    .workbench-line { display: flex; gap: 0.75rem; }
+    .workbench-prompt { flex: 0 0 auto; color: var(--green); }
+    .workbench-path { color: #93c5fd; }
+    .workbench-result { padding-left: 1.6rem; color: #b7c5d8; }
+    .workbench-rule { height: 1px; margin: 1rem 0; background: #26344a; }
+    .workbench-status { display: inline-flex; align-items: center; gap: 0.45rem; color: #9de8c8; }
+    .workbench-status::before { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #34d399; content: ""; }
 
     .section-heading {
       display: flex;
@@ -296,46 +331,33 @@
     .section-heading p { max-width: 34rem; margin: 0; color: var(--muted); }
 
     .projects { padding: 2rem 0 5rem; }
+    .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 
     .project-card {
-      position: relative;
-      overflow: hidden;
-      padding: clamp(1.5rem, 4vw, 2.6rem);
+      display: flex;
+      min-height: 22rem;
+      flex-direction: column;
+      padding: clamp(1.4rem, 3vw, 2rem);
       border: 1px solid var(--line);
-      border-radius: 1.35rem;
+      border-radius: 1rem;
       background: var(--surface);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
     }
 
-    .project-card::after {
-      position: absolute;
-      right: -6rem;
-      bottom: -7rem;
-      width: 18rem;
-      height: 18rem;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(125, 211, 252, 0.2), rgba(196, 181, 253, 0.04) 55%, transparent 70%);
-      content: "";
-      pointer-events: none;
-    }
-
-    .project-intro { position: relative; z-index: 1; max-width: 48rem; }
+    .project-intro { position: relative; z-index: 1; flex: 1; max-width: 48rem; }
 
     .tag {
       display: inline-flex;
-      padding: 0.32rem 0.62rem;
-      border: 1px solid rgba(125, 211, 252, 0.34);
+      padding: 0.3rem 0.58rem;
+      border: 1px solid var(--line);
       border-radius: 999px;
       color: var(--blue);
-      background: rgba(56, 189, 248, 0.08);
-      font-size: 0.72rem;
-      font-weight: 780;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
+      background: var(--surface-subtle);
+      font-size: 0.75rem;
+      font-weight: 720;
     }
 
-    .project-card h3 { margin: 1.4rem 0 0.6rem; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -0.05em; }
+    .project-card h3 { margin: 1.2rem 0 0.6rem; font-size: clamp(1.8rem, 3vw, 2.5rem); letter-spacing: -0.045em; }
     .project-card p { margin: 0; color: var(--muted); }
 
     .project-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
@@ -361,10 +383,17 @@
     }
     footer a { text-underline-offset: 0.22em; }
 
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 3rem; }
+      .workbench { max-width: 38rem; }
+    }
+
     @media (max-width: 760px) {
-      main { padding-top: 3rem; }
-      .hero { padding-bottom: 5rem; }
+      main { padding-top: 2rem; }
+      .hero { padding: 2rem 0 5rem; }
       .section-heading { align-items: start; flex-direction: column; gap: 0.75rem; }
+      .project-grid { grid-template-columns: 1fr; }
+      .project-card { min-height: 0; }
       .interest-list { grid-template-columns: 1fr; }
     }
 
@@ -402,13 +431,27 @@
 
     <main>
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow">Software engineer · builder</p>
-        <h1 id="hero-title">Hi, I'm <span class="gradient">lhmily.</span></h1>
-        <p class="intro">I build projects and learning resources to understand AI, language models, and software systems from first principles.</p>
-        <div class="actions">
-          <a class="button primary" href="#projects">Explore my projects <span aria-hidden="true">↓</span></a>
-          <a class="button" href="https://github.com/lhmily" rel="me">View my GitHub</a>
+        <div class="hero-copy">
+          <p class="eyebrow">Software engineer · builder</p>
+          <h1 id="hero-title">Hi, I'm <span class="accent">lhmily.</span></h1>
+          <p class="intro">I build projects and learning resources to understand AI, computer networks, and software systems from first principles.</p>
+          <div class="actions">
+            <a class="button primary" href="#projects">Explore my projects <span aria-hidden="true">↓</span></a>
+            <a class="button" href="https://github.com/lhmily" rel="me">View my GitHub</a>
+          </div>
         </div>
+
+        <aside class="workbench" aria-label="Current public projects">
+          <div class="workbench-bar"><span>public work</span><span class="workbench-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="workbench-body">
+            <div class="workbench-line"><span class="workbench-prompt">$</span><span>ls courses</span></div>
+            <div class="workbench-result"><span class="workbench-path">llm-lessons</span> 18 illustrated lessons</div>
+            <div class="workbench-result"><span class="workbench-path">tcp-ip-course</span> 12 C17 lessons</div>
+            <div class="workbench-rule"></div>
+            <div class="workbench-line"><span class="workbench-prompt">$</span><span>status</span></div>
+            <div class="workbench-result"><span class="workbench-status">learning in public</span></div>
+          </div>
+        </aside>
       </section>
 
       <section class="projects" id="projects" aria-labelledby="projects-title">
@@ -417,22 +460,41 @@
           <p>Things I build to turn complex ideas into small, inspectable, working systems.</p>
         </div>
 
-        <article class="project-card">
-          <div class="project-intro">
-            <span class="tag">Featured · Education</span>
-            <h3>LLM Lessons</h3>
-            <p>Build a tiny GPT from scratch across 18 illustrated, tested lessons—from tensors and attention to training, alignment, and efficient inference.</p>
-            <div class="project-meta" aria-label="Project attributes">
-              <span>Python</span><span>PyTorch</span><span>CPU friendly</span><span>No API key</span>
+        <div class="project-grid">
+          <article class="project-card">
+            <div class="project-intro">
+              <span class="tag">Course · Education</span>
+              <h3>LLM Lessons</h3>
+              <p>Build a tiny GPT from scratch across 18 illustrated, tested lessons—from tensors and attention to training, alignment, and efficient inference.</p>
+              <div class="project-meta" aria-label="LLM Lessons attributes">
+                <span>18 lessons</span><span>Python</span><span>PyTorch</span><span>CPU friendly</span>
+              </div>
             </div>
-          </div>
 
-          <div class="project-links">
-            <a href="https://lhmily.github.io/llm-lessons/">Explore the project →</a>
-            <a href="https://lhmily.github.io/llm-lessons/lessons/tensors-and-shapes/">Start lesson 1 →</a>
-            <a href="https://github.com/lhmily/llm-lessons">Source code ↗</a>
-          </div>
-        </article>
+            <div class="project-links">
+              <a href="https://lhmily.github.io/llm-lessons/">Explore the course →</a>
+              <a href="https://lhmily.github.io/llm-lessons/lessons/tensors-and-shapes/">Start lesson 1 →</a>
+              <a href="https://github.com/lhmily/llm-lessons">Source code ↗</a>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-intro">
+              <span class="tag">Course · Education</span>
+              <h3>TCP/IP Course</h3>
+              <p>Learn networking from bytes and Ethernet frames through IPv4, TCP, sockets, DNS, HTTP, routing, NAT, and packet diagnostics in C17.</p>
+              <div class="project-meta" aria-label="TCP/IP Course attributes">
+                <span>12 lessons</span><span>C17</span><span>CMake</span><span>Loopback labs</span>
+              </div>
+            </div>
+
+            <div class="project-links">
+              <a href="https://lhmily.github.io/tcp-ip-course/">Explore the course →</a>
+              <a href="https://lhmily.github.io/tcp-ip-course/lessons/bytes-addressing-checksum/">Start lesson 1 →</a>
+              <a href="https://github.com/lhmily/tcp-ip-course">Source code ↗</a>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section class="interests" aria-labelledby="interests-title">
@@ -441,7 +503,7 @@
         </div>
         <div class="interest-list">
           <article><h3>AI and language models</h3><span>Understanding the mechanisms beneath modern intelligent systems.</span></article>
-          <article><h3>Software systems</h3><span>Learning how reliable components fit together and behave in practice.</span></article>
+          <article><h3>Networks and software systems</h3><span>Learning how protocols and reliable components fit together in practice.</span></article>
           <article><h3>First-principles building</h3><span>Turning abstractions into small, inspectable, working implementations.</span></article>
         </div>
       </section>
@@ -449,7 +511,7 @@
 
     <footer>
       <span>Learning in public, one project at a time.</span>
-      <span><a href="https://github.com/lhmily">GitHub</a> · <a href="https://lhmily.github.io/llm-lessons/">LLM Lessons</a></span>
+      <span><a href="https://github.com/lhmily">GitHub</a> · <a href="https://lhmily.github.io/llm-lessons/">LLM Lessons</a> · <a href="https://lhmily.github.io/tcp-ip-course/">TCP/IP Course</a></span>
     </footer>
   </div>
   <script>
@@ -462,7 +524,7 @@
       function applyTheme(theme) {
         root.dataset.theme = theme;
         root.style.colorScheme = theme;
-        colorMeta.setAttribute("content", theme === "dark" ? "#090d18" : "#f5f7fb");
+        colorMeta.setAttribute("content", theme === "dark" ? "#0b1020" : "#f6f7f9");
         const nextTheme = theme === "dark" ? "light" : "dark";
         const label = `Switch to ${nextTheme} mode`;
         toggle.setAttribute("aria-label", label);
